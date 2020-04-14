@@ -1,2 +1,2 @@
 # machine_learning
-Repo to learn and try out things related to MachineLearning
+Repo to learn and try out new things in machine learning
