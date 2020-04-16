@@ -8,6 +8,9 @@ import time
 # import datasets
 from sklearn.datasets import make_moons
 
+# testing with numba
+from numba import njit
+
 # %%
 n_samples    = 5000
 data_noise   = 0.25 # cov
@@ -93,6 +96,10 @@ def evaluate(test_preds, test_labels, verbose=False):
 #   - advantages same as ReLU
 #   - gradient doesn't instantly go to zero for negative values
 #   - faster acceptance
+# * **[Parametric ReLU](https://arxiv.org/pdf/1502.01852.pdf)**
+#   - we don't simply neglect inputs that are less than zero (avoiding zero gradient)
+#   - instead we define a parameter such that the network learns this parameter by itself, providing flexibility in the activation functions
+#   - see the link, for more detailed analysis
 #   
 # Other types are Leaky ReLU (max(0.001X,X)), Parametric ReLU(max(aX,X)), Exponential ReLU.  
 # But the most common type that people use are ReLU because of the computational efficiency and better results with faster convergence.  
@@ -124,7 +131,7 @@ def apply_decision_boundary(X):
 
 class Sigmoid:
     def __init__(self):
-        pass
+        self._sigmoid_val = np.empty(())
     
     def func(self, X):
         sigmoid_val = 1.0/(1.0 + np.exp(-X))
@@ -138,7 +145,7 @@ class Sigmoid:
     
 class ReLU:
     def __init__(self):
-        pass
+        self._relu_val = np.empty(())
     
     def func(self, X):
         relu_val = np.where(X < 0.0, 0.0, X)
@@ -151,23 +158,23 @@ class ReLU:
 class Swish(Sigmoid):
     def __init__(self):
         super().__init__()
-        pass
+        self._swish_val = np.empty(())
     
     def func(self, X):
-        sigmoid_val = super().func(X)
-        swish_val = np.multiply(X, sigmoid_val)
-        return swish_val
+        sigmoid_val          = super().func(X)
+        self._swish_val      = np.multiply(X, sigmoid_val)
+        super()._sigmoid_val = sigmoid_val
+        return self._swish_val
     
     def grad(self, X):
-        sigmoid_val = super().func(X)
-        swish_val = np.multiply(X, sigmoid_val)
-        
-        additive_term = sigmoid_val * (1.0 - swish_val)
-        derivative    = np.add(swish_val, additive_term)
+        sigmoid_val = super()._sigmoid_val
+        additive_term = sigmoid_val * (1.0 - self._swish_val)
+        derivative    = np.add(self._swish_val, additive_term)
         return derivative
 
 
 # %%
+
 # define loss and fit functions for neural network
 def linear_model(data, weights, bias):   
     # model we are fitting is, W*X^T + b
@@ -224,8 +231,9 @@ class NeuralLayer:
         self._weights    = []
         self._bias       = []
         self._n_nodes    = 0
-        self._activation = lambda X: X
-    
+        self._activation = None
+
+# %%
 def feed_forward(data, neural_layers):
     # compute equation W^T.X + b
     
@@ -250,7 +258,6 @@ def feed_forward(data, neural_layers):
     # final layer output will be of size n_samples x n_nodes   
     return prev_layer_activation
 
-# \to-do: clean-up and optimize redundant matrix manipulations
 def forward_backward_pass(data, class_labels, neural_layers):
     weight_gradients = [None]*(len(neural_layers)-1) # size: n_weight_terms for each layer
     bias_gradients   = [None]*(len(neural_layers)-1) # size: n_nodes for each layer
@@ -282,14 +289,13 @@ def forward_backward_pass(data, class_labels, neural_layers):
     result = np.empty((n_samples, neural_layers[-1]._weights.shape[0]))
     for column_idx in range(0, prev_layer_sigmoid.shape[1]):
         n_cols = output_func_grad.shape[1]
-        result[:, column_idx*n_cols:(column_idx+1)*n_cols] = np.multiply(output_func_grad, prev_layer_sigmoid[:, column_idx].reshape((-1, 1)))
+        result[:, column_idx*n_cols:(column_idx+1)*n_cols] = np.multiply(output_func_grad, prev_layer_sigmoid[:, column_idx][:, np.newaxis])
 
     result  = np.mean(result, axis=0)
 
-    weight_gradients[-1]     = np.matmul(output_func_grad.T, prev_layer_sigmoid)
-    weight_gradients[-1]     = result.reshape((-1, 1))
-    
-    bias_gradients[-1]       = np.mean(output_func_grad, axis=0).reshape((-1, 1))
+    # weight_gradients[-1]     = np.matmul(output_func_grad.T, prev_layer_sigmoid)
+    weight_gradients[-1]     = result[:, np.newaxis]
+    bias_gradients[-1]       = np.mean(output_func_grad, axis=0)[:, np.newaxis]
 
     # partials for the remaining layers starting from L-1, with L being index for the output layer
     for layer_idx in range(len(neural_layers)-2, 0, -1):
@@ -305,12 +311,12 @@ def forward_backward_pass(data, class_labels, neural_layers):
         result = np.empty((n_samples, neural_layers[layer_idx]._weights.shape[0]))
         for column_idx in range(0, prev_layer_sigmoid.shape[1]):
             n_cols = this_layer_output_func_grad.shape[1]
-            result[:, column_idx*n_cols:(column_idx+1)*n_cols] = np.multiply(this_layer_output_func_grad, prev_layer_sigmoid[:, column_idx].reshape((-1, 1)))
+            result[:, column_idx*n_cols:(column_idx+1)*n_cols] = np.multiply(this_layer_output_func_grad, prev_layer_sigmoid[:, column_idx][:, np.newaxis])
             
         result = np.mean(result, axis=0)
-        weight_gradients[layer_idx-1] = result.reshape((-1, 1))
+        weight_gradients[layer_idx-1] = result[:, np.newaxis]
         
-        bias_gradients[layer_idx-1]   = np.mean(this_layer_output_func_grad, axis=0).reshape((-1, 1))
+        bias_gradients[layer_idx-1]   = np.mean(this_layer_output_func_grad, axis=0)[:, np.newaxis]
         
         output_func_grad = this_layer_output_func_grad
     
@@ -379,7 +385,7 @@ def steepest_descent(data, class_labels, neural_layers,
               print("Epoch %d/%d"%(iteration, n_iter))
               print("loss: %f"%(loss_this_iter))
 
-            cost_func_trend[iteration+1] = loss_this_iter
+            cost_func_trend[iteration+1] = loss_this_iter[0]
             error = np.abs(loss_this_iter - error)
     
     return neural_layers, cost_func_trend
@@ -387,15 +393,26 @@ def steepest_descent(data, class_labels, neural_layers,
 # %% [markdown]
 # ## Initializing weights 
 # 
-# **[Reference](https://arxiv.org/pdf/1704.08863.pdf)**  
+# ### References  
+  
+# * **[On_Weight_Initialization_in_deep_neural_network](https://arxiv.org/pdf/1704.08863.pdf)**  
+# * **[Understanding_the_difficulty_of_training_deep_feedforward_neural_networks](http://proceedings.mlr.press/v9/glorot10a/glorot10a.pdf)**
+# * **[initialization_notes](https://www.deeplearning.ai/ai-notes/initialization/)** 
+  
 # Most popular initialization methods are _Xavier/Glorot initialization_ for Sigmoid and Tanh functions and _He initialization_ for ReLU activation functions.
 # * Xavier/Glorot initialization
 #   - weights can be sampled from uniform or normal distribution with $\sigma^2 = \frac{1}{N}$
-# * He initialization
+# * [He initialization](https://arxiv.org/pdf/1502.01852.pdf)
 #   - weights can be sampled from uniform or normal distribution with $\sigma^2 = \frac{2}{N}$
 #  
 # where $N$ is the number of nodes in the previous layer.
-
+# If we initialize all weights as the same, this means every weight has an equal affect on the input and the overall transformation from input to output   
+# so the algorithm will take much longer time to converge/may never converge.  
+# Then there is also this problem of vanishing gradients when weights are too small or exploding gradients when weights are too big.  
+# To deal with this 2 assumptions need to be set
+# * mean of the change in activation between layers should be mean
+# * variance of the change in activations should stay the same across every layer
+# more detailed derivation can be found in the link 'initialization_notes'
 # %%
 # specify layer configuration
 # each element specifying number of nodes in that layer
@@ -448,7 +465,7 @@ neural_layers, cost_func_trend = steepest_descent(x_train, y_train, neural_layer
                                                   n_iter=350, step_size=0.35, regularization_factor=0.5,
                                                   batch_size=100, verbose=False)
 end_time = time.time()
-print("time to took to run SGD: %f"%(end_time - start_time))
+print("time to took to run SGD: %f sec"%(end_time - start_time))
 # %%
 y_test = y_test.reshape((-1, layer_config[-1]))
 predicted_labels = feed_forward(x_test, neural_layers)
@@ -492,6 +509,74 @@ plt.xlabel('$x_1$', fontsize=14)
 plt.ylabel('$x_2$', fontsize=14)
 plt.title('Estimated polynomial by NN', fontsize=14)
 plt.show()
+
+# %%
+# understanding how activation functions behave
+
+# output predicted class with activations at each individual layer from each node
+def feed_forward_dbg(data, neural_layers):
+    # compute equation W^T.X + b
+    
+    prev_layer_activation = data # n_samples x n_nodes
+    n_samples            = data.shape[0]
+    
+    activations = [None]*len(neural_layers)
+
+    for layer_idx in range(1, len(neural_layers)):
+        this_layer_activation = np.zeros((n_samples, neural_layers[layer_idx]._n_nodes))
+        
+        for node_idx in range(0, neural_layers[layer_idx]._n_nodes):
+            weights_this_node = neural_layers[layer_idx]._weights[node_idx: : neural_layers[layer_idx]._n_nodes]
+            this_layer_activation[:, node_idx] = linear_model(prev_layer_activation, 
+                                                              weights_this_node,
+                                                              neural_layers[layer_idx]._bias[node_idx])[:, 0]
+            # apply sigmoid function
+            this_layer_activation[:, node_idx] = sigmoid_func(this_layer_activation[:, node_idx])
+
+        activations[layer_idx] = this_layer_activation   
+        prev_layer_activation = this_layer_activation
+    
+    prev_layer_activation = apply_decision_boundary(prev_layer_activation)
+        
+    # final layer output will be of size n_samples x n_nodes   
+    return prev_layer_activation, activations
+
+# plot these activations to see their behavior
+X_input_features = np.zeros((n_points, x_train.shape[1]))
+X_input_features[:, 0] = x1_mesh
+activation_container   = np.ndarray((len(neural_layers)-1,), dtype=np.ndarray)
+for point_idx in range(0, n_points):
+    X_input_features[:, 1]           = x2_mesh[point_idx, 0]
+    predicted_classes, activations   = feed_forward_dbg(X_input_features, neural_layers)
+
+    for layer_idx in range(1, len(neural_layers)):
+        if (point_idx == 0):
+            activation_container[layer_idx-1] = activations[layer_idx]
+        else:
+            activation_container[layer_idx-1] = np.vstack((activation_container[layer_idx-1], activations[layer_idx]))
+
+# %%
+layer_to_see = 1
+n_fig_cols   = 2
+n_fig_rows   = int(activation_container[layer_to_see-1].shape[1]/n_fig_cols)
+
+fig, axis_list = plt.subplots(n_fig_rows, n_fig_cols, figsize=(12,7))
+axis_list = axis_list.ravel()
+
+for axis_idx in range(0, axis_list.size):
+    weights_this_node = neural_layers[layer_to_see]._weights[axis_idx: :neural_layers[layer_to_see]._n_nodes]
+    bias_this_node    = neural_layers[layer_to_see]._bias[axis_idx]
+    axis_list[axis_idx].set_aspect('equal')
+    axis_list[axis_idx].set_title("node: %d [bias: %f]"%(axis_idx, bias_this_node), fontsize=12)
+    cf = axis_list[axis_idx].contour(x1_bounds, x2_bounds, activation_container[layer_to_see-1][:, axis_idx].reshape(n_points, n_points))
+    axis_list[axis_idx].contour(x1_bounds, x2_bounds, np.transpose(predicted_class_mesh))
+    axis_list[axis_idx].set_xlabel('$x_1$ [Weight: %f]'%(weights_this_node[0]), fontsize=12)
+    axis_list[axis_idx].set_ylabel('$x_2$ [Weight: %f]'%(weights_this_node[1]), fontsize=12)
+    fig.colorbar(cf, ax=axis_list[axis_idx])
+
+fig.subplots_adjust(hspace=0.5)
+plt.show()
+
 
 # %% [markdown]
 # ### [Tensorflow reference](https://www.tensorflow.org/api_docs/python/tf/keras/optimizers)
