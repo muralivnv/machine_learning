@@ -15,7 +15,7 @@ import time
 # 
 # ### longest common subsequence
 # 
-# 
+# **[Reference_plagiarism_detection](https://s3.amazonaws.com/video.udacity-data.com/topher/2019/January/5c412841_developing-a-corpus-of-plagiarised-short-answers/developing-a-corpus-of-plagiarised-short-answers.pdf)**
 
 # %%
 from sklearn.feature_extraction.text import CountVectorizer
