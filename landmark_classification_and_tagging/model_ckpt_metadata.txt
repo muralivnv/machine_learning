@@ -1,0 +1,151 @@
+#################################
+model_ckpts/model_ckpt_03-26-2022_15-54-16_architecture.json
+loss: 3.54252, accuracy: 0.07686, top_k_accuracy_3: 0.16702
+valid | loss: 3.22635, accuracy: 0.15430, top_k_accuracy_3: 0.27246
+model_ckpts/model_ckpt_03-26-2022_15-56-36.params
+-------------------
+loss: 3.35044, accuracy: 0.13779, top_k_accuracy_3: 0.27111
+valid | loss: 3.37275, accuracy: 0.20221, top_k_accuracy_3: 0.38879
+model_ckpts/model_ckpt_03-26-2022_15-58-53.params
+-------------------
+loss: 3.30736, accuracy: 0.19013, top_k_accuracy_3: 0.34426
+valid | loss: 3.09646, accuracy: 0.18262, top_k_accuracy_3: 0.34570
+model_ckpts/model_ckpt_03-26-2022_16-01-09.params
+-------------------
+loss: 3.10783, accuracy: 0.21346, top_k_accuracy_3: 0.37739
+valid | loss: 3.21768, accuracy: 0.22978, top_k_accuracy_3: 0.39062
+model_ckpts/model_ckpt_03-26-2022_16-03-26.params
+-------------------
+loss: 2.98798, accuracy: 0.25076, top_k_accuracy_3: 0.42358
+valid | loss: 2.83091, accuracy: 0.28711, top_k_accuracy_3: 0.48047
+model_ckpts/model_ckpt_03-26-2022_16-06-03.params
+-------------------
+loss: 2.98827, accuracy: 0.27273, top_k_accuracy_3: 0.44915
+valid | loss: 2.68636, accuracy: 0.28027, top_k_accuracy_3: 0.47070
+model_ckpts/model_ckpt_03-26-2022_16-08-17.params
+-------------------
+loss: 2.85646, accuracy: 0.29751, top_k_accuracy_3: 0.47543
+valid | loss: 2.89119, accuracy: 0.31158, top_k_accuracy_3: 0.51838
+model_ckpts/model_ckpt_03-26-2022_16-10-40.params
+-------------------
+loss: 2.73997, accuracy: 0.32220, top_k_accuracy_3: 0.50838
+valid | loss: 2.40487, accuracy: 0.35156, top_k_accuracy_3: 0.53320
+model_ckpts/model_ckpt_03-26-2022_16-12-57.params
+-------------------
+loss: 2.55314, accuracy: 0.33446, top_k_accuracy_3: 0.52651
+valid | loss: 2.92921, accuracy: 0.29779, top_k_accuracy_3: 0.48805
+model_ckpts/model_ckpt_03-26-2022_16-15-34.params
+-------------------
+loss: 2.46018, accuracy: 0.35597, top_k_accuracy_3: 0.54057
+valid | loss: 2.52907, accuracy: 0.35254, top_k_accuracy_3: 0.54395
+model_ckpts/model_ckpt_03-26-2022_16-17-51.params
+-------------------
+loss: 2.22234, accuracy: 0.41060, top_k_accuracy_3: 0.60200
+valid | loss: 2.10641, accuracy: 0.43262, top_k_accuracy_3: 0.62109
+model_ckpts/model_ckpt_03-26-2022_16-22-06.params
+-------------------
+loss: 2.31832, accuracy: 0.42956, top_k_accuracy_3: 0.62506
+valid | loss: 2.35482, accuracy: 0.44210, top_k_accuracy_3: 0.62776
+model_ckpts/model_ckpt_03-26-2022_16-24-22.params
+-------------------
+loss: 2.12482, accuracy: 0.43838, top_k_accuracy_3: 0.62847
+valid | loss: 2.07038, accuracy: 0.44434, top_k_accuracy_3: 0.63672
+model_ckpts/model_ckpt_03-26-2022_16-26-55.params
+-------------------
+loss: 2.16807, accuracy: 0.45048, top_k_accuracy_3: 0.63672
+valid | loss: 2.32213, accuracy: 0.45772, top_k_accuracy_3: 0.63879
+model_ckpts/model_ckpt_03-26-2022_16-29-13.params
+-------------------
+loss: 2.07938, accuracy: 0.45389, top_k_accuracy_3: 0.64120
+valid | loss: 2.17284, accuracy: 0.45312, top_k_accuracy_3: 0.63965
+model_ckpts/model_ckpt_03-26-2022_16-31-38.params
+-------------------
+loss: 2.17414, accuracy: 0.45376, top_k_accuracy_3: 0.64182
+valid | loss: 2.03556, accuracy: 0.45996, top_k_accuracy_3: 0.63867
+model_ckpts/model_ckpt_03-26-2022_16-33-55.params
+-------------------
+loss: 2.07557, accuracy: 0.45472, top_k_accuracy_3: 0.64835
+valid | loss: 2.17024, accuracy: 0.44922, top_k_accuracy_3: 0.63672
+model_ckpts/model_ckpt_03-26-2022_16-39-05.params
+-------------------
+loss: 2.06082, accuracy: 0.45409, top_k_accuracy_3: 0.64600
+valid | loss: 2.04519, accuracy: 0.45996, top_k_accuracy_3: 0.63770
+model_ckpts/model_ckpt_03-26-2022_16-41-34.params
+-------------------
+loss: 2.09399, accuracy: 0.45911, top_k_accuracy_3: 0.65045
+valid | loss: 2.30844, accuracy: 0.45404, top_k_accuracy_3: 0.63603
+model_ckpts/model_ckpt_03-26-2022_16-43-52.params
+-------------------
+loss: 2.15045, accuracy: 0.45602, top_k_accuracy_3: 0.64340
+valid | loss: 2.14090, accuracy: 0.46191, top_k_accuracy_3: 0.64746
+model_ckpts/model_ckpt_03-26-2022_16-47-59.params
+-------------------
+loss: 2.19072, accuracy: 0.46075, top_k_accuracy_3: 0.64825
+valid | loss: 2.06220, accuracy: 0.44531, top_k_accuracy_3: 0.63086
+model_ckpts/model_ckpt_03-26-2022_16-50-16.params
+#################################
+
+TRANSFER LEARNING
+
+#################################
+model_ckpts/model_ckpt_04-06-2022_21-31-04_architecture.json
+loss: 1.77507, accuracy: 0.42008, top_k_accuracy_3: 0.58171
+valid | loss: 1.56214, accuracy: 0.60352, top_k_accuracy_3: 0.75684
+model_ckpts/model_ckpt_04-06-2022_21-33-27.params
+-------------------
+loss: 1.18948, accuracy: 0.62878, top_k_accuracy_3: 0.78881
+valid | loss: 1.32506, accuracy: 0.63672, top_k_accuracy_3: 0.77344
+model_ckpts/model_ckpt_04-06-2022_21-35-19.params
+-------------------
+loss: 1.16967, accuracy: 0.68221, top_k_accuracy_3: 0.82686
+valid | loss: 1.30251, accuracy: 0.68474, top_k_accuracy_3: 0.81342
+model_ckpts/model_ckpt_04-06-2022_21-37-04.params
+-------------------
+loss: 1.13735, accuracy: 0.71183, top_k_accuracy_3: 0.85297
+valid | loss: 1.19720, accuracy: 0.68750, top_k_accuracy_3: 0.82129
+model_ckpts/model_ckpt_04-06-2022_21-39-07.params
+-------------------
+loss: 1.02352, accuracy: 0.74849, top_k_accuracy_3: 0.87147
+valid | loss: 1.08014, accuracy: 0.68848, top_k_accuracy_3: 0.82617
+model_ckpts/model_ckpt_04-06-2022_21-41-10.params
+-------------------
+loss: 1.07833, accuracy: 0.75176, top_k_accuracy_3: 0.87576
+valid | loss: 1.22848, accuracy: 0.68199, top_k_accuracy_3: 0.82353
+model_ckpts/model_ckpt_04-06-2022_21-43-24.params
+-------------------
+loss: 1.67483, accuracy: 0.50026, top_k_accuracy_3: 0.68494
+valid | loss: 1.80864, accuracy: 0.54395, top_k_accuracy_3: 0.70605
+model_ckpts/model_ckpt_04-06-2022_21-47-07.params
+-------------------
+loss: 1.35442, accuracy: 0.60081, top_k_accuracy_3: 0.76764
+valid | loss: 1.57531, accuracy: 0.56055, top_k_accuracy_3: 0.73242
+model_ckpts/model_ckpt_04-06-2022_21-49-05.params
+-------------------
+loss: 1.10537, accuracy: 0.64667, top_k_accuracy_3: 0.80670
+valid | loss: 1.58002, accuracy: 0.60662, top_k_accuracy_3: 0.78493
+model_ckpts/model_ckpt_04-06-2022_21-50-43.params
+-------------------
+loss: 1.10785, accuracy: 0.68058, top_k_accuracy_3: 0.83478
+valid | loss: 1.42574, accuracy: 0.63574, top_k_accuracy_3: 0.79590
+model_ckpts/model_ckpt_04-06-2022_21-52-20.params
+-------------------
+loss: 1.12698, accuracy: 0.69556, top_k_accuracy_3: 0.83518
+valid | loss: 1.41816, accuracy: 0.63477, top_k_accuracy_3: 0.77344
+model_ckpts/model_ckpt_04-06-2022_21-54-03.params
+-------------------
+loss: 0.69484, accuracy: 0.77394, top_k_accuracy_3: 0.89768
+valid | loss: 1.14930, accuracy: 0.70772, top_k_accuracy_3: 0.84651
+model_ckpts/model_ckpt_04-06-2022_21-55-50.params
+-------------------
+loss: 0.53942, accuracy: 0.82659, top_k_accuracy_3: 0.92264
+valid | loss: 0.97534, accuracy: 0.71875, top_k_accuracy_3: 0.84863
+model_ckpts/model_ckpt_04-06-2022_21-58-41.params
+-------------------
+loss: 0.54136, accuracy: 0.84199, top_k_accuracy_3: 0.92792
+valid | loss: 1.05582, accuracy: 0.74081, top_k_accuracy_3: 0.85846
+model_ckpts/model_ckpt_04-06-2022_22-00-28.params
+-------------------
+loss: 0.37884, accuracy: 0.85030, top_k_accuracy_3: 0.93700
+valid | loss: 0.97149, accuracy: 0.74707, top_k_accuracy_3: 0.86816
+model_ckpts/model_ckpt_04-06-2022_22-02-28.params
+-------------------
